@@ -5,16 +5,17 @@ fetch('http://localhost:3000/cars')
 
         data.forEach(car => {
             const li = document.createElement('li');
-            li.textContent = `${car.color}- ${car.brand}`;
+            li.textContent = `${car.Color}- ${car.Brand}`;
         
 
         const btn = document.createElement('button');
         btn.textContent = "Delete";
 
-        btn.addEventListener('click', () => {
-            fetch(`http://localhost:3000/cars/${car.id}`, {
-                method: 'DELETE'
-            })
+        
+ btn.addEventListener('click', () => {
+     fetch(`http://localhost:3000/cars/${car.ID}`, {
+           method: 'DELETE'
+           })
             .then(res => res.json())
             .then(result => {
                 console.log(result);
@@ -32,10 +33,13 @@ fetch('http://localhost:3000/cars')
     
 //hämta element
 const form = document.getElementById("itemForm");
-const textfields = document.querySelectorAll(".textield");
+const textfields = document.querySelectorAll(".textfield");
 const checkbox = document.querySelector(".checkbox");
 const resultDiv = document.querySelector(".Result");
 const messageDiv = document.querySelector(".message");
+const idInput = document.getElementById("carid");
+const brandInput = document.getElementById("brand");
+const colorInput = document.getElementById("color");
 
 let editId = null;
 
@@ -60,7 +64,7 @@ function showMessage(text, type = "success") {
   messageDiv.className = type;
 }
 async function createItem(data) {
-  const response = await fetch("http://localhost:3000/items", {
+  const response = await fetch("http://localhost:3000/cars", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -71,8 +75,8 @@ async function createItem(data) {
     throw new Error("Kunde inte skapa objekt");
   }
 }
-async function updateItem(id, data) {
-  const response = await fetch(`http://localhost:3000/items/${id}`, {
+async function updateItem(ID, data) {
+  const response = await fetch(`http://localhost:3000/cars/${ID}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -85,8 +89,29 @@ async function updateItem(id, data) {
 }
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+    const brand = brandInput.value.trim();
+    const color = colorInput.value.trim();
+    let res;
 
-  const data = getFormData();
+
+    if (ID) {
+
+    res = await fetch(`http://localhost:3000/cars/${ID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json",},
+        body: JSON.stringify({id: Number(ID), brand, color}),
+      });
+    } else {
+    res = await fetch("http://localhost:3000/cars", {
+        method: "POST",
+        headers: { "Content-Type": "application/json",},
+        body: JSON.stringify({brand, color}),
+      });
+    }
+  if (!response.ok) {
+    throw new Error("Kunde inte skapa objekt");
+  }
+  const data = await res.json();
 
   try {
     if (editId) {

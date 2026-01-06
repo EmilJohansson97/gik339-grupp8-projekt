@@ -4,7 +4,9 @@ const port = 3000;
 
 const app = express();
 app.use(express.json());
-const db = new sqlite3.Database('cars.db');
+app.use(express.static("public"));
+
+const db = new sqlite3.Database('./cars.db');
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
