@@ -34,18 +34,22 @@ app.get('/cars', (req, res) => {
 })
 
 app.post('/cars', (req, res) => {
-    const {brand, color} = req.body;
+  const { brand, color } = req.body;
 
-    db.run(
-        'INSERT INTO cars VALUES (?, ?)', [brandrand, color], (err) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error inserting into cars');
-        } else {
-            res.json({message: 'Car added successfully'});
-        }
-    })
-})
+  db.run(
+    'INSERT INTO cars (Brand, Color) VALUES (?, ?)',
+    [brand, color],
+    function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error inserting into cars');
+      }
+      // skicka tillbaka nya bilen så frontend kan lägga till den i listan
+      res.json({ ID: this.lastID, Brand: brand, Color: color });
+    }
+  );
+});
+
 
 app.delete('/cars/:id', (req, res) => {
     const id = req.params.id;
