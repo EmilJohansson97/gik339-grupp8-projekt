@@ -28,7 +28,9 @@ fetch('http://localhost:3000/cars')
         });
        
         document.body.appendChild(list);
-    });//hämta element
+    });
+    
+//hämta element
 const form = document.getElementById("itemForm");
 const textfields = document.querySelectorAll(".textield");
 const checkbox = document.querySelector(".checkbox");
