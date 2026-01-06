@@ -74,4 +74,4 @@ app.put('/cars', (req, res) => {
         }
     })
 })
-// db.run('INSERT INTO cars (Brand, Color) VALUES (?, ?)', ['Volvo', 'Red']);
+//db.run('INSERT INTO cars (Brand, Color) VALUES (?, ?)', ['Volvo', 'Red']);
