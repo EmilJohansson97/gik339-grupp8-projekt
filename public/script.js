@@ -9,12 +9,12 @@ const idInput = document.getElementById('carId');
 // ✅ Global lista (bara en)
 const list = document.createElement('ul');
 document.body.appendChild(list);
-
+list.className = 'list-unstyled ms-5';
 // ✅ Lägg till en bil i listan (återanvänds av GET + POST)
 function addCarToList(car) {
   const li = document.createElement('li');
   const card = document.createElement('div');
-  card.className = 'card card-body';
+  card.className = 'card card-body w-50 ml-3';
   li.dataset.id = car.ID;
  
 
@@ -115,6 +115,9 @@ try{
               console.error(err);
               showMessage("Error updating car", "warning");
             });
+        idInput.value = '';
+        showMessage("Car updated", "success");    
+        form.reset();
   } else {
   
     const res = await fetch('http://localhost:3000/cars', {
