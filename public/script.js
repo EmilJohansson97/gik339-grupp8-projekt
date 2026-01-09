@@ -3,11 +3,12 @@ const form = document.getElementById("itemForm");
 const textfields = document.querySelectorAll(".textfield");
 const checkbox = document.querySelector(".checkbox");
 const resultDiv = document.querySelector(".Result");
-const messageDiv = document.querySelector(".message");
+const messageDiv = document.getElementById('msg');
 const brandInput = document.getElementById('brand');
 const colorInput = document.getElementById('color');
-const idInput = document.getElementById('id');
+const idInput = document.getElementById('carId');
 
+let editId = null;
 // ✅ Global lista (bara en)
 const list = document.createElement('ul');
 document.body.appendChild(list);
@@ -22,33 +23,46 @@ function addCarToList(car) {
   edtbtn.textContent = "Edit";
 
   edtbtn.addEventListener('click', () => {
-    const brand = brandInput.value.trim();
-    const color = colorInput.value.trim();
 
-    if (!brand || !color) {
-      alert("Fyll i både brand och color i input-fälten först.");
-      return;
-    }
+    brandInput.value = car.Brand;
+    colorInput.value = car.Color;
 
-    fetch('http://localhost:3000/cars', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: car.ID,
-        brand: brand,
-        color: color
-      })
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-        li.firstChild.textContent = `${brand} - ${color} `;
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error updating car");
-      });
+  
   });
+    // let brand = brandInput.value.trim();
+    // let color = colorInput.value.trim();
+
+    // if(!color) {
+    //   color = car.Color;
+    // }
+
+    // if(!brand) {
+    //   brand = car.Brand;
+    // }
+
+    // fetch('http://localhost:3000/cars', {
+    //   method: 'PUT',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     id: car.ID,
+    //     brand: brand,
+    //     color: color
+    //   })
+    // })
+    //   .then(res => res.json())
+    //   .then(result => {
+    //     console.log(result);
+    //     li.firstChild.textContent = `${brand} - ${color} `;
+    //     car.Brand = brand;
+    //     car.Color = color;
+    //     showMessage("Car updated", "success");
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //     showMessage("Error updating car", "warning");
+    //   });
+    //   form.reset();
+  
 
   // Delete-knapp
   const btn = document.createElement('button');
@@ -62,10 +76,11 @@ function addCarToList(car) {
       .then(result => {
         console.log(result);
         li.remove();
+        showMessage("Car deleted", "danger");
       })
       .catch(err => {
         console.error(err);
-        alert("Error deleting car");
+        showMessage("Error deleting car", "warning");
       });
   });
 
@@ -81,29 +96,11 @@ fetch('http://localhost:3000/cars')
     data.forEach(car => addCarToList(car));
   });
 
-let editId = null;
 
-function handleInput(event) {
-  if (event.target.name === "content") {
-    resultDiv.textContent = event.target.value;
-  }
-}
-textfields.forEach((field) => {
-  field.addEventListener("input", handleInput);
-});
-
-function getFormData() {
-  const data = {};
-  textfields.forEach((field) => {
-    data[field.name] = field.value;
-  });
-  data.published = checkbox.checked;
-  return data;
-}
-
-function showMessage(text, type = "success") {
+function showMessage(text, type) {
   messageDiv.textContent = text;
-  messageDiv.className = type;
+  messageDiv.className = `alert alert-${type}`;
+  messageDiv.classList.remove('d-none');
 }
 
 console.log("form:", form);
@@ -111,37 +108,61 @@ form?.addEventListener("submit", () => console.log("SUBMIT TRIGGERED"));
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
   const brand = brandInput.value.trim();
   const color = colorInput.value.trim();
+  const id = idInput.value;
 
   if (!brand || !color) {
     showMessage("Both fields are required", "danger");
     return;
   }
-
-  try {
+try{
+  if(id) {
+    fetch('http://localhost:3000/cars', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: Number(id), 
+        brand: brand,
+        color: color
+      })
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result);
+        li.firstChild.textContent = `${brand} - ${color} `;
+        car.Brand = brand;
+        car.Color = color;
+        showMessage("Car updated", "success");
+      })
+      .catch(err => {
+        console.error(err);
+        showMessage("Error updating car", "warning");
+      });
+  } else {
+  
     const res = await fetch('http://localhost:3000/cars', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ brand, color })
     });
-
+    
     if (!res.ok) {
-      throw new Error("Kunde inte skapa objekt");
+      showMessage("Error creating car", "warning");
     }
 
     const data = await res.json();
     console.log("Created:", data);
 
-    // ✅ Lägg till nya bilen direkt i listan
     addCarToList(data);
 
     form.reset();
     showMessage("Car created", "success");
-
+    }
   } catch (err) {
     console.error(err);
-    showMessage("Error adding car");
+    showMessage("Error adding car", "danger");
   }
 });
 
