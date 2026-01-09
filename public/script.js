@@ -5,7 +5,6 @@ const brandInput = document.getElementById('brand');
 const colorInput = document.getElementById('color');
 const idInput = document.getElementById('carId');
 
-let editId = null;
 // ✅ Global lista (bara en)
 const list = document.createElement('ul');
 document.body.appendChild(list);
