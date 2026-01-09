@@ -14,7 +14,7 @@ list.className = 'list-unstyled ms-5';
 function addCarToList(car) {
   const li = document.createElement('li');
   const card = document.createElement('div');
-  card.className = 'card card-body w-50 ml-3';
+  card.className = 'card card-body w-50 ml-3 mb-3';
   li.dataset.id = car.ID;
  
 
