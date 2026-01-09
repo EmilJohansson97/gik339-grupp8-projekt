@@ -65,8 +65,9 @@ app.delete('/cars/:id', (req, res) => {
     })
 })
 
-app.put('/cars', (req, res) => {
-    const {id, brand, color} = req.body;
+app.put('/cars/:id', (req, res) => {
+    const id = req.params.id;
+    const { brand, color} = req.body;
 
     db.run(
         'UPDATE cars SET Brand = ?, Color = ? WHERE ID = ?', [brand, color, id], (err) => {

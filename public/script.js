@@ -80,11 +80,10 @@ form.addEventListener("submit", async (event) => {
   }
 try{
   if(id) {
-    fetch('http://localhost:3000/cars', {
+    fetch(`http://localhost:3000/cars/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        id: Number(id), 
         brand: brand,
         color: color
       })
