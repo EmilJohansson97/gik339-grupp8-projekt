@@ -11,26 +11,57 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
-    <main>
-      <h1>List of cars</h1>
 
-      <div id="msg" class="alert d-none" role="alert">asdasd</div>
-      <form id="itemForm">
-        <input type="hidden" id="carId">
+  <body class="bg-light">
+    <main class="container d-flex flex-column">
+
         <div class="row">
-          <div class="col">
-            <input type="text" class="form-control" id="brand" placeholder="Brand" />
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" id="color" placeholder="Color" />
+          <div class="col mt-3">
+            <h1>LIST OF CARS</h1>
+              <p>Enter car information</p>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-      </form>
-      <script
-        src="script.js"
-      ></script>
+      
+
+      <div id="msg" class="alert d-none" role="alert"></div>
+
+      <div class="row justify-content">
+        <div class="col-8">
+          <form id="itemForm">
+            <input type="hidden" id="carId" />
+
+            <div class="row">
+              <div class="col-8">
+                <div class="row mb-2">
+                  <div class="col">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Brand"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Color"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-outline-primary mt-3 mb-3 shadow-lg">
+              Submit
+            </button>
+          </form>
+
+          <script src="script.js"></script>
+        </div>
+      </div>
     </main>
   </body>
 </html>
