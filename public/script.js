@@ -1,8 +1,5 @@
 //hämta element
 const form = document.getElementById("itemForm");
-const textfields = document.querySelectorAll(".textfield");
-const checkbox = document.querySelector(".checkbox");
-const resultDiv = document.querySelector(".Result");
 const messageDiv = document.getElementById('msg');
 const brandInput = document.getElementById('brand');
 const colorInput = document.getElementById('color');
@@ -16,6 +13,7 @@ document.body.appendChild(list);
 // ✅ Lägg till en bil i listan (återanvänds av GET + POST)
 function addCarToList(car) {
   const li = document.createElement('li');
+  li.dataset.id = car.ID;
   li.textContent = `${car.Brand} - ${car.Color} `;
 
   // Edit-knapp
@@ -26,44 +24,8 @@ function addCarToList(car) {
 
     brandInput.value = car.Brand;
     colorInput.value = car.Color;
-
-  
-  });
-    // let brand = brandInput.value.trim();
-    // let color = colorInput.value.trim();
-
-    // if(!color) {
-    //   color = car.Color;
-    // }
-
-    // if(!brand) {
-    //   brand = car.Brand;
-    // }
-
-    // fetch('http://localhost:3000/cars', {
-    //   method: 'PUT',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     id: car.ID,
-    //     brand: brand,
-    //     color: color
-    //   })
-    // })
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     console.log(result);
-    //     li.firstChild.textContent = `${brand} - ${color} `;
-    //     car.Brand = brand;
-    //     car.Color = color;
-    //     showMessage("Car updated", "success");
-    //   })
-    //   .catch(err => {
-    //     console.error(err);
-    //     showMessage("Error updating car", "warning");
-    //   });
-    //   form.reset();
-  
-
+    idInput.value = car.ID;
+ });
   // Delete-knapp
   const btn = document.createElement('button');
   btn.textContent = "Delete";
@@ -131,10 +93,12 @@ try{
       .then(res => res.json())
       .then(result => {
         console.log(result);
-        li.firstChild.textContent = `${brand} - ${color} `;
-        car.Brand = brand;
-        car.Color = color;
+        const li = list.querySelector(`li[data-id='${id}']`);
+        if (li) li.firstChild.textContent = `${brand} - ${color} `;
+       
         showMessage("Car updated", "success");
+        idInput.value = "";
+        form.reset();
       })
       .catch(err => {
         console.error(err);
@@ -166,13 +130,4 @@ try{
   }
 });
 
-function fillForm(item) {
-  textfields.forEach((field) => {
-    field.value = item[field.name] || "";
-  });
-  checkbox.checked = item.published;
-  resultDiv.textContent = item.content;
-  resultDiv.computedStyleMap.backgroundColor = item.color;
 
-  editId = item.id;
-}
