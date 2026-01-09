@@ -5,6 +5,7 @@ const brandInput = document.getElementById('brand');
 const colorInput = document.getElementById('color');
 const idInput = document.getElementById('carId');
 
+
 // ✅ Global lista (bara en)
 const list = document.createElement('ul');
 document.body.appendChild(list);
@@ -12,12 +13,23 @@ document.body.appendChild(list);
 // ✅ Lägg till en bil i listan (återanvänds av GET + POST)
 function addCarToList(car) {
   const li = document.createElement('li');
+  const card = document.createElement('div');
+  card.className = 'card card-body';
   li.dataset.id = car.ID;
-  li.textContent = `${car.Brand} - ${car.Color} `;
+ 
 
+  card.innerHTML = `<div class="card-body">
+    <ul class="list-group">
+    <li class = "list-group-item" style="background-color: ${car.Color.toLowerCase()};" > 
+        <strong>Brand:</strong> <span class="brand">${car.Brand}</span>
+        <strong>Color:</strong> <span class="color">${car.Color}</span></li>
+    </ul>
+      <button class="btn btn-primary mt-2">Edit</button>
+      <button class="btn btn-danger mt-2">Delete</button>
+    </div>`;
+
+  const [edtbtn, btn] = card.querySelectorAll('button');
   // Edit-knapp
-  const edtbtn = document.createElement('button');
-  edtbtn.textContent = "Edit";
 
   edtbtn.addEventListener('click', () => {
 
@@ -26,8 +38,6 @@ function addCarToList(car) {
     idInput.value = car.ID;
  });
   // Delete-knapp
-  const btn = document.createElement('button');
-  btn.textContent = "Delete";
 
   btn.addEventListener('click', () => {
     fetch(`http://localhost:3000/cars/${car.ID}`, {
@@ -44,9 +54,7 @@ function addCarToList(car) {
         showMessage("Error deleting car", "warning");
       });
   });
-
-  li.appendChild(edtbtn);
-  li.appendChild(btn);
+  li.appendChild(card);
   list.appendChild(li);
 }
 
@@ -69,7 +77,6 @@ form?.addEventListener("submit", () => console.log("SUBMIT TRIGGERED"));
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-
   const brand = brandInput.value.trim();
   const color = colorInput.value.trim();
   const id = idInput.value;
@@ -91,17 +98,23 @@ try{
       .then(res => res.json())
       .then(result => {
         console.log(result);
+
         const li = list.querySelector(`li[data-id='${id}']`);
-        if (li) li.firstChild.textContent = `${brand} - ${color} `;
-       
-        showMessage("Car updated", "success");
-        idInput.value = "";
-        form.reset();
-      })
-      .catch(err => {
-        console.error(err);
-        showMessage("Error updating car", "warning");
-      });
+        if (!li) return;
+      
+        const brandSpan = li.querySelector('.brand');
+        const colorSpan = li.querySelector('.color');
+        const item = li.querySelector('.list-group-item');
+
+        if (brandSpan) brandSpan.textContent = brand;
+        if (colorSpan) colorSpan.textContent = color;
+
+        if (item) item.style.backgroundColor = color.toLowerCase()
+            })
+            .catch(err => {
+              console.error(err);
+              showMessage("Error updating car", "warning");
+            });
   } else {
   
     const res = await fetch('http://localhost:3000/cars', {
