@@ -9,7 +9,7 @@ const idInput = document.getElementById("carId");
 const list = document.createElement("ul");
 document.body.appendChild(list);
 // Fixar stil på listan
-list.className = "list-unstyled ms-5";
+list.className = "list-unstyled ms-5 container d-flex flex-column";
 list.style.marginInline = "600px";
 
 // Funktion för att lägga till en bil i och skriva ut som en lista
